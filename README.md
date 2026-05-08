@@ -178,3 +178,17 @@ Pagamentos
 
 # 📷 DER do Sistema
 
+![DER do Sistema](assets/der_barbearia.png)
+
+---
+
+## 📖 Legenda do DER
+
+![Legenda](assets/legenda.png)
+
+---
+
+# 📁 Arquivo Excel
+
+[📊 Sistema_Barbearia_4_Tabelas.xlsx](Sistema_Barbearia_4_Tabelas.xlsx)
+
