@@ -161,18 +161,6 @@ O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
 
 ---
 
-# 📁 Estrutura das Planilhas
-
-O arquivo Excel contém:
-
-```bash
-Clientes
-Barbeiros
-Servicos
-Agendamentos
-Pagamentos
- ```
-
 # 🧩 Modelo Conceitual
 - O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
 
@@ -186,6 +174,18 @@ Pagamentos
 
 ![Legenda](assets/legenda.png)
 
+---
+# 📁 Estrutura das Planilhas
+
+O arquivo Excel contém:
+
+```bash
+Clientes
+Barbeiros
+Servicos
+Agendamentos
+Pagamentos
+ ```
 ---
 
 # 📁 Arquivo Excel
