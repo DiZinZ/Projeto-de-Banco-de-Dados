@@ -171,3 +171,10 @@ Barbeiros
 Servicos
 Agendamentos
 Pagamentos
+ ```
+
+# 🧩 Modelo Conceitual
+- O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
+
+# 📷 DER do Sistema
+
