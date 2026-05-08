@@ -107,7 +107,7 @@ Controla os pagamentos realizados.
 | id_pagamento (PK) | Inteiro |
 | forma_pagamento | Texto |
 | valor | Decimal |
-| data_pagamento | Data |
+| data | Data |
 | status_pagamento | Texto |
 
 ### Relacionamento
