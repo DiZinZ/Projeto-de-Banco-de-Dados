@@ -240,7 +240,7 @@ O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
 
 # 📷 DER do Sistema
 
-![DER do Sistema](assets/der_barbearia.png)
+![DER do Sistema](assets/)
 
 ---
 
@@ -252,7 +252,7 @@ O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
 | Retângulo (azul) | Entidade |
 | Losango (azul) | Relacionamento |
 
-![Legenda](assets/legenda.png)
+![Legenda](assets/)
 
 ---
 
