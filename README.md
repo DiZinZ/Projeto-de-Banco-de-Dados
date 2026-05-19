@@ -251,7 +251,7 @@ O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
 
 # 📷 DER do Sistema
 
-![DER do Sistema](assets/der_barbearia)
+![DER do Sistema](assets/der_barbearia.png)
 
 ---
 
