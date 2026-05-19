@@ -251,7 +251,7 @@ O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
 
 # 📷 DER do Sistema
 
-![DER do Sistema](assets/)
+![DER do Sistema](assets/der_barbearia)
 
 ---
 
@@ -286,4 +286,4 @@ Pagamentos
 
 # 📁 Arquivo Excel
 
-[📊 Sistema_Barbearia_Tabelas.xlsx](der_barbearia.xls)
+[📊 Sistema_Barbearia_Tabelas.xlsx](banco_barbearia.xlsx)
