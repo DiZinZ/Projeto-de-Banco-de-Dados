@@ -29,18 +29,18 @@ O sistema tem como objetivo facilitar o gerenciamento de uma barbearia, permitin
 
 | Código | Descrição |
 |--------|-----------|
-| RF01 | O sistema deve permitir cadastrar um cliente com nome, telefone, CPF e email. |
+| RF01 | O sistema deve permitir cadastrar um cliente com nome, telefone e CPF. |
 | RF02 | O sistema deve permitir editar e excluir o cadastro de um cliente. |
-| RF03 | O sistema deve permitir cadastrar um barbeiro com nome, telefone, CPF, especialidade, salário e status. |
-| RF04 | O sistema deve permitir cadastrar um atendente com nome, telefone, CPF, salário e status. |
+| RF03 | O sistema deve permitir cadastrar um barbeiro com especialidade, salário e status, herdando dados de Funcionário. |
+| RF04 | O sistema deve permitir cadastrar um atendente com salário, status e setor, herdando dados de Funcionário. |
 | RF05 | O sistema deve permitir editar e excluir o cadastro de funcionários. |
-| RF06 | O sistema deve permitir cadastrar serviços com nome e preço. |
-| RF07 | O sistema deve permitir cadastrar produtos com nome e preço. |
-| RF08 | O sistema deve permitir registrar um agendamento vinculando um cliente e um barbeiro, com data e hora. |
+| RF06 | O sistema deve permitir cadastrar serviços com nome, preço e duração. |
+| RF07 | O sistema deve permitir cadastrar produtos com nome, preço e quantidade. |
+| RF08 | O sistema deve permitir registrar um agendamento vinculando um cliente e um funcionário, com data. |
 | RF09 | O sistema deve registrar atendimentos vinculados a agendamentos, contendo serviços e produtos. |
 | RF10 | O sistema deve suportar múltiplos serviços e produtos em um mesmo atendimento (relação N:N). |
 | RF11 | O sistema deve gerar automaticamente um pagamento ao concluir um atendimento. |
-| RF12 | O sistema deve registrar a forma de pagamento, o valor e a data do pagamento. |
+| RF12 | O sistema deve registrar a forma de pagamento, o valor e o status do pagamento. |
 | RF13 | O sistema deve permitir atualizar o status do pagamento para: pendente, pago ou estornado. |
 | RF14 | O sistema deve garantir que cada atendimento possua no máximo um pagamento associado (1:1). |
 
@@ -58,11 +58,10 @@ Armazena informações dos clientes da barbearia.
 
 | Campo | Tipo |
 |---|---|
-| id_cliente (PK) | Inteiro |
-| nome | Texto |
-| telefone | Texto |
-| cpf | Texto |
-| email | Texto |
+| ID_CLIENTE (PK) | Inteiro |
+| NOME | Texto |
+| TELEFONE | Texto |
+| CPF | Texto |
 
 ---
 
@@ -70,40 +69,44 @@ Armazena informações dos clientes da barbearia.
 
 Entidade genérica que representa todos os funcionários da barbearia. Especializada em **Barbeiro** e **Atendente**.
 
----
-
-## ✂️ Barbeiro *(especialização de Funcionário)*
-
-Armazena informações dos barbeiros.
-
 ### Atributos
 
 | Campo | Tipo |
 |---|---|
-| id_barbeiro (PK) | Inteiro |
-| nome | Texto |
-| telefone | Texto |
-| cpf | Texto |
-| especialidade | Texto |
-| status | Texto |
-| salario | Decimal |
+| ID_FUNCIONARIO (PK) | Inteiro |
+| NOME | Texto |
+| CPF | Texto |
+| TELEFONE | Texto |
+
+---
+
+## ✂️ Barbeiro *(especialização de Funcionário)*
+
+Herda os atributos de Funcionário e adiciona informações específicas do barbeiro.
+
+### Atributos próprios
+
+| Campo | Tipo |
+|---|---|
+| ID_FUNCIONARIO (PK/FK) | Inteiro |
+| ESPECIALIDADE | Texto |
+| SALÁRIO | Decimal |
+| STATUS | Texto |
 
 ---
 
 ## 🧾 Atendente *(especialização de Funcionário)*
 
-Armazena informações dos atendentes.
+Herda os atributos de Funcionário e adiciona informações específicas do atendente.
 
-### Atributos
+### Atributos próprios
 
 | Campo | Tipo |
 |---|---|
-| id_atendente (PK) | Inteiro |
-| nome | Texto |
-| telefone | Texto |
-| cpf | Texto |
-| status | Texto |
-| salario | Decimal |
+| ID_FUNCIONARIO (PK/FK) | Inteiro |
+| SALÁRIO | Decimal |
+| STATUS | Texto |
+| SETOR | Texto |
 
 ---
 
@@ -115,9 +118,10 @@ Armazena os serviços oferecidos pela barbearia.
 
 | Campo | Tipo |
 |---|---|
-| id_servico (PK) | Inteiro |
-| nome_servico | Texto |
-| preco | Decimal |
+| ID_SERVIÇO (PK) | Inteiro |
+| NOME | Texto |
+| PREÇO | Decimal |
+| DURAÇÃO | Inteiro (minutos) |
 
 ---
 
@@ -129,30 +133,29 @@ Armazena os produtos comercializados pela barbearia.
 
 | Campo | Tipo |
 |---|---|
-| id_produto (PK) | Inteiro |
-| nome_produto | Texto |
-| preco | Decimal |
+| ID_PRODUTO (PK) | Inteiro |
+| NOME | Texto |
+| PREÇO | Decimal |
+| QUANTIDADE | Inteiro |
 
 ---
 
 ## 📅 Agendamento
 
-Responsável pelo controle dos agendamentos dos clientes com os barbeiros.
+Responsável pelo controle dos agendamentos dos clientes com os funcionários.
 
 ### Atributos
 
 | Campo | Tipo |
 |---|---|
-| id_agendamento (PK) | Inteiro |
-| id_cliente (FK) | Inteiro |
-| id_barbeiro (FK) | Inteiro |
-| data_agendamento | Data |
-| hora_agendamento | Hora |
+| ID_AGENDAMENTO (PK) | Inteiro |
+| DATA_AGENDAMENTO | Data |
 
 ### Relacionamentos
 
-- Cliente **realiza** Agendamento (M:N → via entidade Agenda)
-- Agendamento **gera** Atendimento
+- Cliente **faz** Agendamento (1:N)
+- Agendamento **recebe** Funcionário (N:1)
+- Agendamento **origina** Atendimento (1:N)
 
 ---
 
@@ -160,11 +163,20 @@ Responsável pelo controle dos agendamentos dos clientes com os barbeiros.
 
 Representa a execução do serviço agendado. Vincula os serviços e produtos consumidos.
 
+### Atributos
+
+| Campo | Tipo |
+|---|---|
+| ID_ATENDIMENTO (PK) | Inteiro |
+| DATA | Data |
+| HORA | Hora |
+| STATUS | Texto |
+
 ### Relacionamentos
 
-- Atendimento **contém** Serviços (N:N)
-- Atendimento **contém** Produtos (N:N)
-- Atendimento é **atendido por** Funcionário (1:1)
+- Atendimento **possui** Serviços (N:N)
+- Atendimento **utiliza** Produtos (N:N)
+- Atendimento é **atendido por** Funcionário (N:1)
 - Atendimento **gera** Pagamento (1:1)
 
 ---
@@ -177,12 +189,10 @@ Controla os pagamentos realizados por atendimento.
 
 | Campo | Tipo |
 |---|---|
-| id_pagamento (PK) | Inteiro |
-| id_atendimento (FK) | Inteiro |
-| forma_pagamento | Texto |
-| valor | Decimal |
-| data_pagamento | Data |
-| status_pagamento | Texto |
+| ID_PAGAMENTO (PK) | Inteiro |
+| VALOR | Decimal |
+| FORMA_PAGAMENTO | Texto |
+| STATUS | Texto |
 
 ---
 
@@ -190,14 +200,15 @@ Controla os pagamentos realizados por atendimento.
 
 | Relacionamento | Cardinalidade |
 |---|---|
-| Cliente → Agendamento | M:N (via Agenda) |
-| Agendamento → Atendimento | 1:N |
-| Atendimento → Serviço | N:N (via Contém) |
-| Atendimento → Produto | N:N (via Contém) |
-| Funcionário → Atendimento | 1:1 (Atendido Por) |
+| Cliente → Agendamento | 1:N (Faz) |
+| Agendamento → Funcionário | N:1 (Recebe) |
+| Agendamento → Atendimento | 1:N (Origina) |
+| Atendimento → Serviço | N:N (Possui) |
+| Atendimento → Produto | N:N (Utiliza) |
+| Atendimento → Funcionário | N:1 (Atendido Por) |
+| Atendimento → Pagamento | 1:1 (Gera) |
 | Funcionário ← Barbeiro | Especialização |
 | Funcionário ← Atendente | Especialização |
-| Atendimento → Pagamento | 1:1 (Gera) |
 
 ---
 
@@ -250,9 +261,8 @@ O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
 |---|---|
 | Elipse (cinza) | Atributo |
 | Retângulo (azul) | Entidade |
-| Losango (azul) | Relacionamento |
-
-![Legenda](assets/legenda.png)
+| Losango (cinza) | Relacionamento |
+| Triângulo | Especialização (herança) |
 
 ---
 
@@ -260,11 +270,12 @@ O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
 
 O arquivo Excel contém:
 
-```bash
+```
 Clientes
+Funcionários
 Barbeiros
 Atendentes
-Servicos
+Serviços
 Produtos
 Agendamentos
 Atendimentos
