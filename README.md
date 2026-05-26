@@ -287,3 +287,8 @@ Pagamentos
 # 📁 Arquivo Excel
 
 [📊 Sistema_Barbearia_Tabelas.xlsx](banco_barbearia.xlsx)
+
+
+# 📁 Banco de Dados MySql
+
+{💾 Banco de Dados Etapa 2}(assets/barbearia_sql.sql)
