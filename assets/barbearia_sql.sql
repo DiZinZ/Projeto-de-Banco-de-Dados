@@ -6,6 +6,9 @@
 
 SET NAMES 'utf8mb4';
 
+-- codificação de caracteres para suportar 
+-- acentos e caracteres especiais do português
+
 -- ============================================================
 --  DDL — CRIAÇÃO DO BANCO E TABELAS
 -- ============================================================
