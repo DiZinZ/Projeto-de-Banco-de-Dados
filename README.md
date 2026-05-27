@@ -3,12 +3,12 @@
 Sistema de gerenciamento de barbearia desenvolvido para controle de:
 
 - Clientes
-- Barbeiros
-- Serviços
-- Agendamentos
+- Funcionários (Barbeiros e Atendentes)
+- Serviços e Produtos
+- Agendamentos e Atendimentos
 - Pagamentos
 
-O projeto foi modelado utilizando conceitos de Banco de Dados Relacional e implementado inicialmente em Excel como protótipo funcional.
+O projeto foi modelado utilizando conceitos de Banco de Dados Relacional com DER (Diagrama Entidade-Relacionamento) e implementado inicialmente em Excel como protótipo funcional.
 
 ---
 
@@ -17,11 +17,32 @@ O projeto foi modelado utilizando conceitos de Banco de Dados Relacional e imple
 O sistema tem como objetivo facilitar o gerenciamento de uma barbearia, permitindo:
 
 - Cadastro de clientes
-- Cadastro de barbeiros
-- Controle de serviços
-- Agendamento de atendimentos
+- Cadastro de funcionários (barbeiros e atendentes)
+- Controle de serviços e produtos
+- Agendamento e controle de atendimentos
 - Controle de pagamentos
 - Organização financeira
+
+---
+
+# ✅ Requisitos Funcionais
+
+| Código | Descrição |
+|--------|-----------|
+| RF01 | O sistema deve permitir cadastrar um cliente com nome, telefone e CPF. |
+| RF02 | O sistema deve permitir editar e excluir o cadastro de um cliente. |
+| RF03 | O sistema deve permitir cadastrar um barbeiro com especialidade, salário e status, herdando dados de Funcionário. |
+| RF04 | O sistema deve permitir cadastrar um atendente com salário, status e setor, herdando dados de Funcionário. |
+| RF05 | O sistema deve permitir editar e excluir o cadastro de funcionários. |
+| RF06 | O sistema deve permitir cadastrar serviços com nome, preço e duração. |
+| RF07 | O sistema deve permitir cadastrar produtos com nome, preço e quantidade. |
+| RF08 | O sistema deve permitir registrar um agendamento vinculando um cliente e um funcionário, com data. |
+| RF09 | O sistema deve registrar atendimentos vinculados a agendamentos, contendo serviços e produtos. |
+| RF10 | O sistema deve suportar múltiplos serviços e produtos em um mesmo atendimento (relação N:N). |
+| RF11 | O sistema deve gerar automaticamente um pagamento ao concluir um atendimento. |
+| RF12 | O sistema deve registrar a forma de pagamento, o valor e o status do pagamento. |
+| RF13 | O sistema deve permitir atualizar o status do pagamento para: pendente, pago ou estornado. |
+| RF14 | O sistema deve garantir que cada atendimento possua no máximo um pagamento associado (1:1). |
 
 ---
 
@@ -37,26 +58,55 @@ Armazena informações dos clientes da barbearia.
 
 | Campo | Tipo |
 |---|---|
-| id_cliente (PK) | Inteiro |
-| nome | Texto |
-| telefone | Texto |
-| email | Texto |
-| data_nascimento | Data |
+| ID_CLIENTE (PK) | Inteiro |
+| NOME | Texto |
+| TELEFONE | Texto |
+| CPF | Texto |
 
 ---
 
-## ✂️ Barbeiro
+## 👔 Funcionário *(Superclasse)*
 
-Armazena informações dos barbeiros.
+Entidade genérica que representa todos os funcionários da barbearia. Especializada em **Barbeiro** e **Atendente**.
 
 ### Atributos
 
 | Campo | Tipo |
 |---|---|
-| id_barbeiro (PK) | Inteiro |
-| nome | Texto |
-| especialidade | Texto |
-| telefone | Texto |
+| ID_FUNCIONARIO (PK) | Inteiro |
+| NOME | Texto |
+| CPF | Texto |
+| TELEFONE | Texto |
+
+---
+
+## ✂️ Barbeiro *(especialização de Funcionário)*
+
+Herda os atributos de Funcionário e adiciona informações específicas do barbeiro.
+
+### Atributos próprios
+
+| Campo | Tipo |
+|---|---|
+| ID_FUNCIONARIO (PK/FK) | Inteiro |
+| ESPECIALIDADE | Texto |
+| SALÁRIO | Decimal |
+| STATUS | Texto |
+
+---
+
+## 🧾 Atendente *(especialização de Funcionário)*
+
+Herda os atributos de Funcionário e adiciona informações específicas do atendente.
+
+### Atributos próprios
+
+| Campo | Tipo |
+|---|---|
+| ID_FUNCIONARIO (PK/FK) | Inteiro |
+| SALÁRIO | Decimal |
+| STATUS | Texto |
+| SETOR | Texto |
 
 ---
 
@@ -68,51 +118,81 @@ Armazena os serviços oferecidos pela barbearia.
 
 | Campo | Tipo |
 |---|---|
-| id_servico (PK) | Inteiro |
-| nome_servico | Texto |
-| preco | Decimal |
-| duracao_min | Inteiro |
+| ID_SERVIÇO (PK) | Inteiro |
+| NOME | Texto |
+| PREÇO | Decimal |
+| DURAÇÃO | Inteiro (minutos) |
+
+---
+
+## 📦 Produto
+
+Armazena os produtos comercializados pela barbearia.
+
+### Atributos
+
+| Campo | Tipo |
+|---|---|
+| ID_PRODUTO (PK) | Inteiro |
+| NOME | Texto |
+| PREÇO | Decimal |
+| QUANTIDADE | Inteiro |
 
 ---
 
 ## 📅 Agendamento
 
-Responsável pelo controle dos atendimentos.
+Responsável pelo controle dos agendamentos dos clientes com os funcionários.
 
 ### Atributos
 
 | Campo | Tipo |
 |---|---|
-| id_agendamento (PK) | Inteiro |
-| data | Data |
-| hora | Hora |
-| status | Texto |
+| ID_AGENDAMENTO (PK) | Inteiro |
+| DATA_AGENDAMENTO | Data |
 
 ### Relacionamentos
 
-- Cliente realiza agendamento
-- Barbeiro atende agendamento
-- Serviço é oferecido no agendamento
+- Cliente **faz** Agendamento (1:N)
+- Agendamento **recebe** Funcionário (N:1)
+- Agendamento **origina** Atendimento (1:N)
+
+---
+
+## 🪑 Atendimento
+
+Representa a execução do serviço agendado. Vincula os serviços e produtos consumidos.
+
+### Atributos
+
+| Campo | Tipo |
+|---|---|
+| ID_ATENDIMENTO (PK) | Inteiro |
+| DATA | Data |
+| HORA | Hora |
+| STATUS | Texto |
+
+### Relacionamentos
+
+- Atendimento **possui** Serviços (N:N)
+- Atendimento **utiliza** Produtos (N:N)
+- Atendimento é **atendido por** Funcionário (N:1)
+- Atendimento **gera** Pagamento (1:1)
 
 ---
 
 ## 💳 Pagamento
 
-Controla os pagamentos realizados.
+Controla os pagamentos realizados por atendimento.
 
 ### Atributos
 
 | Campo | Tipo |
 |---|---|
-| id_pagamento (PK) | Inteiro |
-| forma_pagamento | Texto |
-| valor | Decimal |
-| data | Data |
-| status_pagamento | Texto |
-
-### Relacionamento
-
-- Agendamento gera pagamento
+| ID_PAGAMENTO (PK) | Inteiro |
+| VALOR | Decimal |
+| FORMA_PAGAMENTO | Texto |
+| STATUS | Texto |
 
 ---
 
@@ -120,10 +200,15 @@ Controla os pagamentos realizados.
 
 | Relacionamento | Cardinalidade |
 |---|---|
-| Cliente → Agendamento | 1:N |
-| Barbeiro → Agendamento | 1:N |
-| Serviço → Agendamento | 1:N |
-| Agendamento → Pagamento | 1:1 |
+| Cliente → Agendamento | 1:N (Faz) |
+| Agendamento → Funcionário | N:1 (Recebe) |
+| Agendamento → Atendimento | 1:N (Origina) |
+| Atendimento → Serviço | N:N (Possui) |
+| Atendimento → Produto | N:N (Utiliza) |
+| Atendimento → Funcionário | N:1 (Atendido Por) |
+| Atendimento → Pagamento | 1:1 (Gera) |
+| Funcionário ← Barbeiro | Especialização |
+| Funcionário ← Atendente | Especialização |
 
 ---
 
@@ -134,9 +219,11 @@ O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
 ## Entidades principais
 
 - Cliente
-- Barbeiro
+- Funcionário (Barbeiro / Atendente)
 - Serviço
+- Produto
 - Agendamento
+- Atendimento
 - Pagamento
 
 ---
@@ -144,12 +231,13 @@ O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
 # 📊 Funcionalidades
 
 ✅ Cadastro de clientes  
-✅ Cadastro de barbeiros  
-✅ Cadastro de serviços  
+✅ Cadastro de barbeiros e atendentes  
+✅ Cadastro de serviços e produtos  
 ✅ Controle de agendamentos  
+✅ Controle de atendimentos  
 ✅ Controle de pagamentos  
 ✅ Controle financeiro básico  
-✅ Organização relacional dos dados  
+✅ Organização relacional dos dados com herança (Funcionário → Barbeiro / Atendente)  
 
 ---
 
@@ -161,9 +249,6 @@ O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
 
 ---
 
-# 🧩 Modelo Conceitual
-- O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
-
 # 📷 DER do Sistema
 
 ![DER do Sistema](assets/der_barbearia.png)
@@ -172,23 +257,38 @@ O sistema foi modelado utilizando DER (Diagrama Entidade Relacionamento).
 
 ## 📖 Legenda do DER
 
-![Legenda](assets/legenda.png)
+| Símbolo | Significado |
+|---|---|
+| Elipse (cinza) | Atributo |
+| Retângulo (azul) | Entidade |
+| Losango (cinza) | Relacionamento |
+| Triângulo | Especialização (herança) |
 
 ---
+
 # 📁 Estrutura das Planilhas
 
 O arquivo Excel contém:
 
-```bash
+```
 Clientes
+Funcionários
 Barbeiros
-Servicos
+Atendentes
+Serviços
+Produtos
 Agendamentos
+Atendimentos
 Pagamentos
- ```
+```
+
 ---
 
 # 📁 Arquivo Excel
 
-[📊 Sistema_Barbearia_4_Tabelas.xlsx](Sistema_Barbearia_4_Tabelas.xlsx)
+[📊 Sistema_Barbearia_Tabelas.xlsx](banco_barbearia.xlsx)
 
+
+# 📁 Banco de Dados MySql
+
+[💾 Banco de Dados Etapa 2](assets/barbearia_sql.sql)
