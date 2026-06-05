@@ -293,4 +293,4 @@ Pagamentos
 
 [💾 Banco de Dados Etapa 2](assets/barbearia_sql.sql)
 
-[💾 Banco de Dados Etapa 3](assets/consultas.sql.sql)
+[💾 Banco de Dados Etapa 3 - Consultas](assets/consultas.sql.sql)
