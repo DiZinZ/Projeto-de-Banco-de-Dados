@@ -217,7 +217,7 @@ INSERT INTO PAGAMENTO (ID_PAGAMENTO, VALOR, FORMA_PAGAMENTO, STATUS, ID_ATENDIME
 
 
 -- ============================================================
---  ETAPA 3 — VIEWS (criadas antes dos SELECTs)
+--  ETAPA 3 — VIEWS
 -- ============================================================
 
 CREATE OR REPLACE VIEW vw_relatorio_atendimentos AS
@@ -528,10 +528,10 @@ START TRANSACTION;
     (12, '2026-06-10', '09:00:00', 'Concluído', 11, 1);
 
     INSERT INTO PAGAMENTO (ID_PAGAMENTO, VALOR, FORMA_PAGAMENTO, STATUS, ID_ATENDIMENTO) VALUES
-    (11, -50.00, 'PIX', 'Pago', 12); -- ❌ valor negativo, operação inválida
+    (11, -50.00, 'PIX', 'Pago', 12); -- ❌ valor negativo, operação deu errado
 
 ROLLBACK;
--- ⛔ Nenhuma alteração salva — tudo revertido
+-- ⛔ Nenhuma alteração salva
 
 -- ------------------------------------------------------------
 -- T3: COMMIT — Concluir atendimento + serviço + produto + pagamento
@@ -551,7 +551,7 @@ START TRANSACTION;
     (11, 60.00, 'PIX', 'Pago', 11);
 
 COMMIT;
--- ✅ Atendimento completo salvo com segurança
+-- ✅ Atendimento completo salvo
 
 -- ------------------------------------------------------------
 -- T4: SAVEPOINT — Reajuste de preços com ponto de retorno
@@ -570,7 +570,7 @@ START TRANSACTION;
     UPDATE SERVICO SET PRECO = PRECO * 1.05;
 
 COMMIT;
--- ✅ Reajuste de 5% aplicado com segurança
+-- ✅ Reajuste de 5% aplicado
 
 -- ------------------------------------------------------------
 -- T5: SAVEPOINT — Cadastro de funcionário com retorno parcial
@@ -624,7 +624,7 @@ START TRANSACTION;
     WHERE ID_AGENDAMENTO = 11;
 
 COMMIT;
--- ✅ Cancelamento e estorno registrados com segurança
+-- ✅ Cancelamento e estorno registrados
 
 -- ------------------------------------------------------------
 -- T8: COMMIT — Consistência: criar pagamento pendente para atendimentos sem pagamento
